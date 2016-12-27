@@ -36,13 +36,12 @@ namespace AVX1
 			{
 				char *xv = (char*)&loc_addr;
 
-				for (size_t i = 0; i < 8; i++) gendata1[PLOT_SIZE + i] = xv[7 - i];
-
-				for (size_t i = PLOT_SIZE; i <= PLOT_SIZE + 7; ++i)
+				for (size_t i = 0; i < 8; i++)
 				{
-					gendata2[i] = gendata1[i];
-					gendata3[i] = gendata1[i];
-					gendata4[i] = gendata1[i];
+					gendata1[PLOT_SIZE + i] = xv[7 - i];
+					gendata2[PLOT_SIZE + i] = xv[7 - i];
+					gendata3[PLOT_SIZE + i] = xv[7 - i];
+					gendata4[PLOT_SIZE + i] = xv[7 - i];					
 				}
 
 				nonce1 = local_startnonce + n + 0;
@@ -99,15 +98,15 @@ namespace AVX1
 				_mm256_zeroupper();
 				char *xv = (char*)&loc_addr;
 
-				gendata[PLOT_SIZE] = xv[7]; gendata[PLOT_SIZE + 1] = xv[6]; gendata[PLOT_SIZE + 2] = xv[5]; gendata[PLOT_SIZE + 3] = xv[4];
-				gendata[PLOT_SIZE + 4] = xv[3]; gendata[PLOT_SIZE + 5] = xv[2]; gendata[PLOT_SIZE + 6] = xv[1]; gendata[PLOT_SIZE + 7] = xv[0];
-
+				for (size_t i = 0; i < 8; i++)
+					gendata[PLOT_SIZE + i] = xv[7 - i];
+				
 				nonce = local_startnonce + n;
 				xv = (char*)&(nonce);
 
-				gendata[PLOT_SIZE + 8] = xv[7]; gendata[PLOT_SIZE + 9] = xv[6]; gendata[PLOT_SIZE + 10] = xv[5]; gendata[PLOT_SIZE + 11] = xv[4];
-				gendata[PLOT_SIZE + 12] = xv[3]; gendata[PLOT_SIZE + 13] = xv[2]; gendata[PLOT_SIZE + 14] = xv[1]; gendata[PLOT_SIZE + 15] = xv[0];
-
+				for (size_t i = 8; i < 16; i++)
+					gendata[PLOT_SIZE + i] = xv[15 - i];
+				
 				for (size_t i = PLOT_SIZE; i > 0; i -= HASH_SIZE)
 				{
 					shabal_init(x, 256);
