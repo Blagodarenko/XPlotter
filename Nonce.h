@@ -4,6 +4,7 @@
 #include <vector>
 #include <array>
 #include <thread>
+#include <string>
 
 
 
@@ -14,6 +15,8 @@
 
 extern std::array <char*, HASH_CAP * sizeof(char*)> cache;
 extern std::vector<size_t> worker_status;
+
+bool write_to_stream(const unsigned long long data);
 
 namespace AVX1
 {
