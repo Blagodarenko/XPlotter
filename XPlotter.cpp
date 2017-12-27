@@ -341,7 +341,7 @@ int main(int argc, char* argv[])
 	// ajusting nonces 
 	nonces = (nonces / (bytesPerSector / SCOOP_SIZE)) * (bytesPerSector / SCOOP_SIZE);
 
-	std::string filename = std::to_string(addr) + "_" + std::to_string(startnonce) + "_" + std::to_string(nonces) + "_" + std::to_string(nonces);
+	std::string filename = std::to_string(addr) + "_" + std::to_string(startnonce) + "_" + std::to_string(nonces);
 	
 	BOOL granted = SetPrivilege();
 

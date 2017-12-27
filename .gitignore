@@ -27,3 +27,9 @@
 *.exe
 *.out
 *.app
+
+# Generated files
+*.opensdf
+*.sdf
+ipch/
+x64/
