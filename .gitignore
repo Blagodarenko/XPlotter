@@ -27,3 +27,8 @@
 *.exe
 *.out
 *.app
+
+# Debug Generated files
+Release/
+ipch/
+x64/
