@@ -13,6 +13,17 @@ std::vector<size_t> worker_status;
 unsigned long long written_scoops = 0;
 
 
+void printColouredMessage(std::string message, WORD colour) {
+	SetConsoleTextAttribute(hConsole, colour);
+	printf("%s", message);
+	SetConsoleTextAttribute(hConsole, colour::GRAY);
+}
+
+void printLastError(std::string message) {
+	SetConsoleTextAttribute(hConsole, colour::RED);
+	printf("%s (code = %u) \n", message, GetLastError());
+	SetConsoleTextAttribute(hConsole, colour::GRAY);
+}
 
 BOOL SetPrivilege(void)
 {
@@ -22,18 +33,14 @@ BOOL SetPrivilege(void)
 		SE_MANAGE_VOLUME_NAME,  // privilege to lookup 
 		&luid))					// receives LUID of privilege
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("LookupPrivilegeValue error: %u\n", GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError("LookupPrivilegeValue error:");
 		return FALSE;
 	}
 
 	HANDLE hToken;
 	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken))
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("OpenProcessToken error: %u\n", GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError("OpenProcessToken error:");
 		return FALSE;
 	}
 
@@ -46,17 +53,13 @@ BOOL SetPrivilege(void)
 
 	if (!AdjustTokenPrivileges(	hToken,	FALSE,	&tp, sizeof(TOKEN_PRIVILEGES),	(PTOKEN_PRIVILEGES)NULL, (PDWORD)NULL))
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("AdjustTokenPrivileges error: %u\n", GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError("AdjustTokenPrivileges error:");
 		return FALSE;
 	}
 
 	if (GetLastError() == ERROR_NOT_ALL_ASSIGNED)
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("The token does not have the specified privilege.\nFor faster writing you should restart plotter with Administrative rights.\n");
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printColouredMessage("The token does not have the specified privilege.\nFor faster writing you should restart plotter with Administrative rights.\n", RED);
 		return FALSE;
 	}
 	return TRUE;
@@ -99,16 +102,12 @@ void writer_i(const unsigned long long offset, const unsigned long long nonces_t
 		liDistanceToMove.QuadPart = (scoop*glob_nonces + offset) * SCOOP_SIZE;
 		if (!SetFilePointerEx(ofile, liDistanceToMove, nullptr, FILE_BEGIN))
 		{
-			SetConsoleTextAttribute(hConsole, colour::RED);
-			printf(" error SetFilePointerEx (code = %u)\n", GetLastError());
-			SetConsoleTextAttribute(hConsole, colour::GRAY);
+			printLastError(" error SetFilePointerEx");
 			exit(-1);
 		}
 		if (!WriteFile(ofile, &cache_write[scoop][0], DWORD(SCOOP_SIZE * nonces_to_write), &dwBytesWritten, nullptr))
 		{
-			SetConsoleTextAttribute(hConsole, colour::RED);
-			printf(" Failed WriteFile (code = %u)\n", GetLastError());
-			SetConsoleTextAttribute(hConsole, colour::GRAY);
+			printLastError(" Failed WriteFile");
 			exit(-1);
 		}
 		written_scoops = scoop+1;
@@ -128,24 +127,18 @@ bool write_to_stream(const unsigned long long data)
 	unsigned long long buf = data;
 	if (!SetFilePointerEx(ofile_stream, liDistanceToMove, nullptr, FILE_BEGIN))
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf(" error stream SetFilePointerEx (code = %u)\n", GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError(" error stream SetFilePointerEx");
 		return false;
 	}
 	if (!WriteFile(ofile_stream, &buf, DWORD(sizeof(buf)), &dwBytesWritten, nullptr))
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf(" Failed stream WriteFile (code = %u)\n", GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError(" Failed stream WriteFile");
 		return false;
 	}
 	if (SetEndOfFile(ofile_stream) == 0)
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf(" Failed stream SetEndOfFile (code = %u)\n", GetLastError());
+		printLastError(" Failed stream SetEndOfFile");
 		CloseHandle(ofile_stream);
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
 		return false;
 		exit(-1);
 	}
@@ -160,17 +153,13 @@ unsigned long long read_from_stream()
 	liDistanceToMove.QuadPart = 0;
 	if (!SetFilePointerEx(ofile_stream, liDistanceToMove, nullptr, FILE_BEGIN))
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf(" error stream SetFilePointerEx (code = %u)\n", GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError(" error stream SetFilePointerEx");
 		return 0;
 	}
 	unsigned long long buf = 0;
 	if (!ReadFile(ofile_stream, &buf, DWORD(sizeof(buf)), &dwBytesRead, nullptr))
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf(" Failed stream ReadFile (code = %u)\n", GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError(" Failed stream ReadFile");
 		return 0;
 	}
 	//printf(" read_from_stream = %llu\n", buf);
@@ -238,9 +227,7 @@ int main(int argc, char* argv[])
 
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	if (hConsole == NULL) {
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("Failed to retrieve handle of the process (%u).\n", GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError("Failed to retrieve handle of the process");
 		exit(-1);
 	}
 
@@ -311,9 +298,7 @@ int main(int argc, char* argv[])
 	//printf("GetCurrentDirectory %s\n", out_path.c_str());
 	if (!CreateDirectoryA(out_path.c_str(), nullptr) && ERROR_ALREADY_EXISTS != GetLastError())
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("Can't create directory %s for plots (Error %u)\n", out_path.c_str(), GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError("Can't create directory " + out_path + " for plots");
 		exit(-1);
 	}
 	
@@ -325,9 +310,7 @@ int main(int argc, char* argv[])
 	DWORD totalNumberOfClusters;
 	if (!GetDiskFreeSpaceA(out_path.c_str(), &sectorsPerCluster, &bytesPerSector, &numberOfFreeClusters, &totalNumberOfClusters))
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("GetDiskFreeSpace failed (Error %u)\n", GetLastError());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printLastError("GetDiskFreeSpace failed");
 		exit(-1);
 	}
 	printf("\tBytes per Sector: %u\n", bytesPerSector);
@@ -348,17 +331,13 @@ int main(int argc, char* argv[])
 	ofile_stream = CreateFileA((out_path + filename + ":stream").c_str(), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
 	if (ofile_stream == INVALID_HANDLE_VALUE)
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("Error creating stream for file %s\n", (out_path + filename).c_str());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printColouredMessage("Error creating stream for file " + out_path + filename + "\n", RED);
 		exit(-1);
 	}
 	unsigned long long nonces_done = read_from_stream();
 	if (nonces_done == nonces) // exit
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("File is already finished. Delete the existing file to start over\n");
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printColouredMessage("File is already finished. Delete the existing file to start over\n", RED);
 		CloseHandle(ofile_stream);
 		exit(0);
 	}
@@ -368,14 +347,11 @@ int main(int argc, char* argv[])
 		printf("Continuing with nonce %llu\n", nonces_done);
 	}
 
-	SetConsoleTextAttribute(hConsole, colour::DARKGRAY);
-	printf("Creating file: %s\n", (out_path + filename).c_str());
+	printColouredMessage("Creating file: " + out_path + filename + "\n", colour::DARKGRAY);
 	ofile = CreateFileA((out_path + filename).c_str(), GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_ALWAYS, FILE_FLAG_NO_BUFFERING, nullptr); //FILE_ATTRIBUTE_NORMAL     FILE_FLAG_WRITE_THROUGH |
 	if (ofile == INVALID_HANDLE_VALUE)
 	{
-		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("Error creating file %s\n", (out_path + filename).c_str());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
+		printColouredMessage("Error creating file " + out_path + filename + "\n", RED);
 		CloseHandle(ofile_stream);
 		exit(-1);
 	}
@@ -388,11 +364,10 @@ int main(int argc, char* argv[])
 	if (SetEndOfFile(ofile) == 0)
 	{
 		SetConsoleTextAttribute(hConsole, colour::RED);
-		printf("Not enough free space, reduce \"nonces\"... (code = %u)\n", GetLastError());
+		printLastError("Not enough free space, reduce \"nonces\"...");
 		CloseHandle(ofile);
 		CloseHandle(ofile_stream);
 		DeleteFileA((out_path + filename).c_str());
-		SetConsoleTextAttribute(hConsole, colour::GRAY);
 		exit(-1);
 	}
 	
@@ -400,11 +375,9 @@ int main(int argc, char* argv[])
 	{
 		if (SetFileValidData(ofile, nonces * PLOT_SIZE) == 0)
 		{
-			SetConsoleTextAttribute(hConsole, colour::RED);
-			printf("SetFileValidData error (code = %u)\n", GetLastError());
+			printLastError("SetFileValidData error");
 			CloseHandle(ofile);
 			CloseHandle(ofile_stream);
-			SetConsoleTextAttribute(hConsole, colour::GRAY);
 			exit(-1);
 		}
 	}
@@ -442,11 +415,9 @@ int main(int argc, char* argv[])
 		cache_write[i] = (char *)VirtualAlloc(nullptr, threads * nonces_per_thread * SCOOP_SIZE, MEM_COMMIT, PAGE_READWRITE);
 		if ((cache[i] == nullptr) || (cache_write[i] == nullptr))
 		{
-			SetConsoleTextAttribute(hConsole, colour::RED);
-			printf(" Error allocating memory\n");
+			printColouredMessage(" Error allocating memory", RED);
 			CloseHandle(ofile);
 			CloseHandle(ofile_stream);
-			SetConsoleTextAttribute(hConsole, colour::GRAY);
 			exit(-1);
 		}
 	}
@@ -554,4 +525,3 @@ int main(int argc, char* argv[])
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 	return 0;
 }
-

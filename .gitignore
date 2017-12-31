@@ -27,3 +27,10 @@
 *.exe
 *.out
 *.app
+
+# Debug Generated as VS folders
+Release/
+ipch/
+x64/
+Debug/
+.vs/
