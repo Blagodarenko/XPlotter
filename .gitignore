@@ -28,7 +28,9 @@
 *.out
 *.app
 
-# Debug Generated files
+# Debug Generated as VS folders
 Release/
 ipch/
 x64/
+Debug/
+.vs/
