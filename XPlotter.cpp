@@ -15,13 +15,13 @@ unsigned long long written_scoops = 0;
 
 void printColouredMessage(std::string message, WORD colour) {
 	SetConsoleTextAttribute(hConsole, colour);
-	printf("%s", message);
+	std::printf("%s", message.c_str());
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 }
 
 void printLastError(std::string message) {
 	SetConsoleTextAttribute(hConsole, colour::RED);
-	printf("%s (code = %u) \n", message, GetLastError());
+	std::printf("%s (code = %u) \n", message.c_str(), GetLastError());
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 }
 
