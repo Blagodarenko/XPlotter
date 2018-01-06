@@ -84,19 +84,23 @@ unsigned long long getTotalSystemMemory()
 	return status.ullAvailPhys;
 }
 
+//#define __PRINT_WRITER_PERF__
+
 void writer_i(const unsigned long long offset, const unsigned long long nonces_to_write, const unsigned long long glob_nonces)
 {
 	LARGE_INTEGER liDistanceToMove;
-	LARGE_INTEGER start_time, end_time;
 	DWORD dwBytesWritten;
-	double PCFreq = 0.0;
-	
 	LARGE_INTEGER li;
 	QueryPerformanceFrequency(&li);
-	PCFreq = double(li.QuadPart);
-	
+		
+#ifdef __PRINT_WRITER_PERF__
+	const auto pc_freq = double(li.QuadPart);
+	LARGE_INTEGER start_time, end_time;
+	QueryPerformanceCounter(static_cast<LARGE_INTEGER*>(&start_time));
+#endif
+
 	written_scoops = 0;
-	QueryPerformanceCounter((LARGE_INTEGER*)&start_time);
+
 	for (size_t scoop = 0; scoop < HASH_CAP; scoop++)
 	{
 		liDistanceToMove.QuadPart = (scoop*glob_nonces + offset) * SCOOP_SIZE;
@@ -112,9 +116,12 @@ void writer_i(const unsigned long long offset, const unsigned long long nonces_t
 		}
 		written_scoops = scoop+1;
 	}
-	QueryPerformanceCounter((LARGE_INTEGER*)&end_time);
-	
-	//printf("\n%.3f\n", double(end_time.QuadPart - start_time.QuadPart) / PCFreq);
+
+#ifdef __PRINT_WRITER_PERF__
+	QueryPerformanceCounter(static_cast<LARGE_INTEGER*>(&end_time));	
+	printf("\n%.3f\n", double(end_time.QuadPart - start_time.QuadPart) / pc_freq);
+#endif
+
 	write_to_stream(offset+nonces_to_write);
 	return;
 }
