@@ -5,6 +5,7 @@
 #include <array>
 #include <thread>
 #include <string>
+#include <intrin.h>
 
 
 
