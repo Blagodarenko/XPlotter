@@ -457,6 +457,8 @@ int main(int argc, char* argv[])
 		{
 		#ifdef __AVX__
 			std::thread th(std::thread(AVX1::work_i, i, addr, startnonce + nonces_done + i*nonces_per_thread, nonces_per_thread));
+		#elif __AVX2__
+			std::thread th(std::thread(AVX2::work_i, i, addr, startnonce + nonces_done + i * nonces_per_thread, nonces_per_thread));
 		#else
 			std::thread th(std::thread(SSE4::work_i, i, addr, startnonce + nonces_done + i*nonces_per_thread, nonces_per_thread));
 		#endif
