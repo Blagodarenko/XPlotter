@@ -399,9 +399,6 @@ int main(int argc, char* argv[])
 	// check free RAM
 	if (freeRAM < nonces_per_thread * threads * PLOT_SIZE * 2) nonces_per_thread = freeRAM / threads / PLOT_SIZE / 2;
 
-	//ajusting
-	nonces_per_thread = (nonces_per_thread / (bytesPerSector / SCOOP_SIZE)) * (bytesPerSector / SCOOP_SIZE);
-
 	SetConsoleTextAttribute(hConsole, colour::BLUE);
 	printf("ID:  %llu\n", addr);
 	printf("Start_nonce:  %llu\n", startnonce);
