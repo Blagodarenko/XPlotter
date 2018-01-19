@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler (x64) Version 12.00.40629.0   01/03/17 10:20:33
+Microsoft (R) Macro Assembler (x64) Version 12.00.40629.0   01/19/18 13:12:51
 shabal.asm						     Page 1 - 1
 
 
@@ -8,15 +8,15 @@ shabal.asm						     Page 1 - 1
 				; Syntax: MASM/ML64
 				; Instruction set: SSE2, x64
 				option dotname
-				
+
 				public shabal_init
 				public shabal
 				public shabal_close
-				
-				
+
+
 				;_text   SEGMENT ALIGN(8) 'CODE'                         ; section number 1
  00000000			_text   SEGMENT 'CODE'                         ; section number 1
-				
+
  00000000			shabal_inner LABEL NEAR
  00000000  55			        push    rbp                                     ; 0000 _ 55
  00000001  48/ 8B EF		        mov     rbp, rdi                                ; 0001 _ 48: 89. FD
@@ -31,9 +31,9 @@ shabal.asm						     Page 1 - 1
 				; Filling space: 7H
 				; Filler type: Multi-byte NOP
 				;       db 0FH, 1FH, 80H, 00H, 00H, 00H, 00H
-				
+
 				ALIGN   8
-				
+
  00000028			Lm0     LABEL NEAR
  00000028  F3/ 0F 6F 26		        movdqu  xmm4, xmmword ptr [rsi]                 ; 0028 _ F3: 0F 6F. 26
  0000002C  F3/ 0F 6F 6E		        movdqu  xmm5, xmmword ptr [rsi+10H]             ; 002C _ F3: 0F 6F. 6E, 10
@@ -1228,9 +1228,9 @@ shabal.asm						     Page 1 - 1
  00000E88  48/ 8B E0		        mov     rsp, rax                                ; 0E88 _ 48: 89. C4
  00000E8B  5D			        pop     rbp                                     ; 0E8B _ 5D
  00000E8C  C3			        ret                                             ; 0E8C _ C3
-				
+
  00000E8D			shabal_init PROC
-				
+
 				  ; Make space for 10 xmm registers, 2 G.P. registers, 
 				  ; and align stack by 16
  00000E8D  48/ 81 EC		  sub     rsp, 184;   10*16 + 2*8 + 8
@@ -1259,26 +1259,26 @@ shabal.asm						     Page 1 - 1
 	   00000090
  00000ED7  44/ 0F 29 BC 24	  movaps  [rsp+0A0h],xmm15
 	   000000A0
-				
+
 				  ; Windows parameters (rcx,rdx,r8,r9) -> Unix parameters (rdi,rsi,rdx,rcx)
  00000EE0  48/ 8B F9		  mov     rdi, rcx
  00000EE3  48/ 8B F2		  mov     rsi, rdx
  00000EE6  49/ 8B D0		  mov     rdx, r8
  00000EE9  49/ 8B C9		  mov     rcx, r9    
-				
-				
+
+
  00000EEC  8B C6		        mov     eax, esi                                ; 0E8D _ 89. F0
  00000EEE  E8 00000000		        call    Li1                                     ; 0E8F _ E8, 00000000
-				
+
  00000EF3			Li1     LABEL NEAR
  00000EF3  5E			        pop     rsi                                     ; 0E94 _ 5E
 				; Note: Immediate operand could be made smaller by sign extension
 				        ;add     rsi, -116                               ; 0E95 _ 48: 81. C6, FFFFFF8C
-				
+
 				  ; Obtain address of 'iv' in a position-independent way.
  00000EF4  48/ 81 C6		  add    rsi, iv - Li1 - 176
 	   FFFFFFDD
-				
+
  00000EFB  89 87 00000100	        mov     dword ptr [rdi+100H], eax               ; 0E9C _ 89. 87, 00000100
  00000F01  C1 E8 05		        shr     eax, 5                                  ; 0EA2 _ C1. E8, 05
  00000F04  69 C0 000000B0	        imul    eax, eax, 176                           ; 0EA5 _ 69. C0, 000000B0
@@ -1292,8 +1292,8 @@ shabal.asm						     Page 1 - 1
 	   000000C0
  00000F27  33 C0		        xor     eax, eax                                ; 0EC8 _ 31. C0
  00000F29  48/ AB		        stosq                                           ; 0ECA _ 48: AB
-				
-				
+
+
 				  ; Restore saved registers
  00000F2B  48/ 8B 34 24		  mov     rsi,   [rsp]
  00000F2F  48/ 8B 7C 24		  mov     rdi,   [rsp+8]
@@ -1320,16 +1320,16 @@ shabal.asm						     Page 1 - 1
 				  ; restore stack pointer
  00000F77  48/ 81 C4		  add     rsp, 184
 	   000000B8
-				
+
  00000F7E  C3			        ret                                             ; 0ECC _ C3
  00000F7F			shabal_init ENDP
-				
+
 				; Filling space: 3H
 				; Filler type: Multi-byte NOP
 				;       db 0FH, 1FH, 00H
-				
+
 				ALIGN   8
-				
+
  00000F80			iv      label byte
  00000F80  24 16 99 30 D1	        db 24H, 16H, 99H, 30H, 0D1H, 13H, 68H, 80H      ; 0ED0 _ $..0..h.
 	   13 68 80
@@ -1351,7 +1351,7 @@ shabal.asm						     Page 1 - 1
 	   14 30 80
  00000FC8  12 3B D4 9F 51	        db 12H, 3BH, 0D4H, 9FH, 51H, 98H, 42H, 43H      ; 0F18 _ .;..Q.BC
 	   98 42 43
- 00000FD0  E7 9C CE B6 E8	        db 0E7H, 9CH, 0CEH, 0B6H, 0E8H, 01H, 7EH, 0FDH  ; 0F20 _ ......~.
+ 00000FD0  E7 9C CE B6 E8        db 0E7H, 9CH, 0CEH, 0B6H, 0E8H, 01H, 7EH, 0FDH  ; 0F20 _ ......~.
 	   01 7E FD
  00000FD8  32 88 C0 05 F9	        db 32H, 88H, 0C0H, 05H, 0F9H, 9BH, 0BH, 1BH     ; 0F28 _ 2.......
 	   9B 0B 1B
@@ -2035,7 +2035,7 @@ shabal.asm						     Page 1 - 1
 	   A0 D9 AE
  00001A78  8D DC 37 25 69	        db 8DH, 0DCH, 37H, 25H, 69H, 59H, 0DBH, 7CH     ; 19C8 _ ..7%iY.|
 	   59 DB 7C
-				
+
  00001A80			reduced_memcpy LABEL NEAR
  00001A80  51			        push    rcx                                     ; 19D0 _ 51
  00001A81  48/ C1 E9 03		        shr     rcx, 3                                  ; 19D1 _ 48: C1. E9, 03
@@ -2044,7 +2044,7 @@ shabal.asm						     Page 1 - 1
  00001A89  83 E1 07		        and     ecx, 07H                                ; 19D9 _ 83. E1, 07
  00001A8C  F3/ A4		        rep movsb                                       ; 19DC _ F2: A4
  00001A8E  C3			        ret                                             ; 19DE _ C3
-				
+
  00001A8F			align_structure_enter LABEL NEAR
  00001A8F  50			        push    rax                                     ; 19DF _ 50
  00001A90  48/ 8D 45 74		        lea     rax, [rbp+74H]                          ; 19E0 _ 48: 8D. 45, 74
@@ -2053,7 +2053,7 @@ shabal.asm						     Page 1 - 1
  00001A9A  75 05		        jnz     Lase1                                   ; 19EA _ 75, 05
  00001A9C  48/ 8D 7D 48		        lea     rdi, [rbp+48H]                          ; 19EC _ 48: 8D. 7D, 48
  00001AA0  C3			        ret                                             ; 19F0 _ C3
-				
+
  00001AA1			Lase1   LABEL NEAR
  00001AA1  57			        push    rdi                                     ; 19F1 _ 57
  00001AA2  56			        push    rsi                                     ; 19F2 _ 56
@@ -2065,7 +2065,7 @@ shabal.asm						     Page 1 - 1
  00001AB1  5E			        pop     rsi                                     ; 1A01 _ 5E
  00001AB2  5F			        pop     rdi                                     ; 1A02 _ 5F
  00001AB3  C3			        ret                                             ; 1A03 _ C3
-				
+
  00001AB4			align_structure_leave LABEL NEAR
  00001AB4  57			        push    rdi                                     ; 1A04 _ 57
  00001AB5  48/ 8D 7D 48		        lea     rdi, [rbp+48H]                          ; 1A05 _ 48: 8D. 7D, 48
@@ -2077,11 +2077,11 @@ shabal.asm						     Page 1 - 1
  00001AC5  F3/ 48/ A5		        rep movsq                                       ; 1A15 _ F3 48: A5
  00001AC8  5E			        pop     rsi                                     ; 1A18 _ 5E
  00001AC9  59			        pop     rcx                                     ; 1A19 _ 59
-				
+
  00001ACA			Lasl1   LABEL NEAR
  00001ACA  5F			        pop     rdi                                     ; 1A1A _ 5F
  00001ACB  C3			        ret                                             ; 1A1B _ C3
-				
+
  00001ACC			shabal  PROC
 				            
 				  ; Make space for 10 xmm registers, 2 G.P. registers, 
@@ -2112,14 +2112,14 @@ shabal.asm						     Page 1 - 1
 	   00000090
  00001B16  44/ 0F 29 BC 24	  movaps  [rsp+0A0h],xmm15
 	   000000A0
-				
+
 				  ; Windows parameters (rcx,rdx,r8,r9) -> Unix parameters (rdi,rsi,rdx,rcx)
  00001B1F  48/ 8B F9		  mov     rdi, rcx
  00001B22  48/ 8B F2		  mov     rsi, rdx
  00001B25  49/ 8B D0		  mov     rdx, r8
  00001B28  49/ 8B C9		  mov     rcx, r9    
-				
-				
+
+
  00001B2B  55			        push    rbp                                     ; 1A1C _ 55
  00001B2C  48/ 8B EF		        mov     rbp, rdi                                ; 1A1D _ 48: 89. FD
  00001B2F  48/ 8B C4		        mov     rax, rsp                                ; 1A20 _ 48: 89. E0
@@ -2140,7 +2140,7 @@ shabal.asm						     Page 1 - 1
  00001B63  48/ 2B FD		        sub     rdi, rbp                                ; 1A55 _ 48: 29. EF
  00001B66  89 7D 40		        mov     dword ptr [rbp+40H], edi                ; 1A58 _ 89. 7D, 40
  00001B69  EB 64		        jmp     Ls9                                     ; 1A5B _ EB, 65
-				
+
  00001B6B			Ls1     LABEL NEAR
  00001B6B  48/ 8B FC		        mov     rdi, rsp                                ; 1A5D _ 48: 89. E7
  00001B6E  E8 FFFFFF1C		        call    align_structure_enter                   ; 1A60 _ E8, FFFFFF7A
@@ -2161,7 +2161,7 @@ shabal.asm						     Page 1 - 1
  00001B97  5F			        pop     rdi                                     ; 1A8A _ 5F
  00001B98  5E			        pop     rsi                                     ; 1A8B _ 5E
  00001B99  5A			        pop     rdx                                     ; 1A8C _ 5A
-				
+
  00001B9A			Ls2     LABEL NEAR
  00001B9A  48/ 8B C2		        mov     rax, rdx                                ; 1A8D _ 48: 89. D0
  00001B9D  48/ C1 E8 06		        shr     rax, 6                                  ; 1A90 _ 48: C1. E8, 06
@@ -2177,7 +2177,7 @@ shabal.asm						     Page 1 - 1
  00001BB8  5F			        pop     rdi                                     ; 1AAB _ 5F
  00001BB9  5E			        pop     rsi                                     ; 1AAC _ 5E
  00001BBA  5A			        pop     rdx                                     ; 1AAD _ 5A
-				
+
  00001BBB			Ls3     LABEL NEAR
  00001BBB  57			        push    rdi                                     ; 1AAE _ 57
  00001BBC  48/ 8B FD		        mov     rdi, rbp                                ; 1AAF _ 48: 89. EF
@@ -2186,14 +2186,14 @@ shabal.asm						     Page 1 - 1
  00001BC4  E8 FFFFFEB7		        call    reduced_memcpy                          ; 1AB7 _ E8, FFFFFF14
  00001BC9  5E			        pop     rsi                                     ; 1ABC _ 5E
  00001BCA  E8 FFFFFEE5		        call    align_structure_leave                   ; 1ABD _ E8, FFFFFF42
-				
+
  00001BCF			Ls9     LABEL NEAR
  00001BCF  48/ 8B 84 24		        mov     rax, qword ptr [rsp+0B8H]               ; 1AC2 _ 48: 8B. 84 24, 000000B8
 	   000000B8
  00001BD7  48/ 8B E0		        mov     rsp, rax                                ; 1ACA _ 48: 89. C4
  00001BDA  5D			        pop     rbp                                     ; 1ACD _ 5D
-				
-				
+
+
 				  ; Restore saved registers
  00001BDB  48/ 8B 34 24		  mov     rsi,   [rsp]
  00001BDF  48/ 8B 7C 24		  mov     rdi,   [rsp+8]
@@ -2220,10 +2220,10 @@ shabal.asm						     Page 1 - 1
 				  ; restore stack pointer
  00001C27  48/ 81 C4		  add     rsp, 184
 	   000000B8
-				
+
  00001C2E  C3			        ret                                             ; 1ACE _ C3
  00001C2F			shabal  ENDP
-				
+
  00001C2F			shabal_close PROC
 				                 
 				  ; Make space for 10 xmm registers, 2 G.P. registers, 
@@ -2254,14 +2254,14 @@ shabal.asm						     Page 1 - 1
 	   00000090
  00001C79  44/ 0F 29 BC 24	  movaps  [rsp+0A0h],xmm15
 	   000000A0
-				
+
 				  ; Windows parameters (rcx,rdx,r8,r9) -> Unix parameters (rdi,rsi,rdx,rcx)
  00001C82  48/ 8B F9		  mov     rdi, rcx
  00001C85  48/ 8B F2		  mov     rsi, rdx
  00001C88  49/ 8B D0		  mov     rdx, r8
  00001C8B  49/ 8B C9		  mov     rcx, r9    
-				
-				
+
+
  00001C8E  53			        push    rbx                                     ; 1ACF _ 53
  00001C8F  55			        push    rbp                                     ; 1AD0 _ 55
  00001C90  48/ 8B EF		        mov     rbp, rdi                                ; 1AD1 _ 48: 89. FD
@@ -2296,7 +2296,7 @@ shabal.asm						     Page 1 - 1
  00001CDA  E8 FFFFFDB0		        call    align_structure_enter                   ; 1B1B _ E8, FFFFFEBF
  00001CDF  56			        push    rsi                                     ; 1B20 _ 56
  00001CE0  BB 00000004		        mov     ebx, 4                                  ; 1B21 _ BB, 00000004
-				
+
  00001CE5			Lc1     LABEL NEAR
  00001CE5  BA 00000001		        mov     edx, 1                                  ; 1B26 _ BA, 00000001
  00001CEA  48/ 8B F5		        mov     rsi, rbp                                ; 1B2B _ 48: 89. EE
@@ -2321,8 +2321,8 @@ shabal.asm						     Page 1 - 1
  00001D22  48/ 8B E0		        mov     rsp, rax                                ; 1B63 _ 48: 89. C4
  00001D25  5D			        pop     rbp                                     ; 1B66 _ 5D
  00001D26  5B			        pop     rbx                                     ; 1B67 _ 5B
-				
-				
+
+
 				  ; Restore saved registers
  00001D27  48/ 8B 34 24		  mov     rsi,   [rsp]
  00001D2B  48/ 8B 7C 24		  mov     rdi,   [rsp+8]
@@ -2349,14 +2349,14 @@ shabal.asm						     Page 1 - 1
 				  ; restore stack pointer
  00001D73  48/ 81 C4		  add     rsp, 184
 	   000000B8
-				
+
  00001D7A  C3			        ret                                             ; 1B68 _ C3
  00001D7B			shabal_close ENDP
-				
+
  00001D7B			_text   ENDS
-				
+
 				END
-Microsoft (R) Macro Assembler (x64) Version 12.00.40629.0   01/03/17 10:20:33
+Microsoft (R) Macro Assembler (x64) Version 12.00.40629.0   01/19/18 13:12:51
 shabal.asm						     Symbols 2 - 1
 
 

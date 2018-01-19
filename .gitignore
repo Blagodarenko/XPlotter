@@ -34,3 +34,9 @@ ipch/
 x64/
 Debug/
 .vs/
+
+# Additional VS generated files
+*.sdf
+*.opensdf
+*.vcxproj.user
+*.suo

@@ -212,6 +212,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="mshabal_avx1.c" />
+    <ClCompile Include="mshabal_avx2.c" />
     <ClCompile Include="mshabal_sse4.c" />
     <ClCompile Include="Nonce.cpp" />
     <ClCompile Include="XPlotter.cpp" />
