@@ -177,10 +177,18 @@ namespace AVX2
 		delete[] gendata2;
 		delete[] gendata3;
 		delete[] gendata4;
+		delete[] gendata5;
+		delete[] gendata6;
+		delete[] gendata7;
+		delete[] gendata8;
 		delete[] final1;
 		delete[] final2;
 		delete[] final3;
 		delete[] final4;
+		delete[] final5;
+		delete[] final6;
+		delete[] final7;
+		delete[] final8;
 		delete[] x;
 		delete[] mx;
 
