@@ -21,7 +21,7 @@ void printColouredMessage(std::string message, WORD colour) {
 
 void printLastError(std::string message) {
 	SetConsoleTextAttribute(hConsole, colour::RED);
-	std::printf("%s (code = %u) \n", message.c_str(), GetLastError());
+	std::fprintf(stderr, "%s (code = %u) \n", message.c_str(), GetLastError());
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 }
 
