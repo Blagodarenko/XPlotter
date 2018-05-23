@@ -222,12 +222,12 @@ int drive_info(const std::string &path)
 }
 
 /*
-unsigned long long GCD(unsigned long long a, unsigned long long b)  //наибольший общий делитель
+unsigned long long GCD(unsigned long long a, unsigned long long b)  //Г­Г ГЁГЎГ®Г«ГјГёГЁГ© Г®ГЎГ№ГЁГ© Г¤ГҐГ«ГЁГІГҐГ«Гј
 {
 return b ? GCD(b, a%b) : a;
 }
 
-unsigned long long LCM(unsigned long long a, unsigned long long b) //наименьшее общее кратное
+unsigned long long LCM(unsigned long long a, unsigned long long b) //Г­Г ГЁГ¬ГҐГ­ГјГёГҐГҐ Г®ГЎГ№ГҐГҐ ГЄГ°Г ГІГ­Г®ГҐ
 {
 return a / GCD(a, b) * b;
 }
@@ -417,7 +417,6 @@ int main(int argc, char* argv[])
 
 	if (memory) nonces_per_thread = memory * 2 / threads;
 	else nonces_per_thread = 1024; //(bytesPerSector / SCOOP_SIZE) * 1024 / threads;
-
 	if (nonces < nonces_per_thread * threads) 	nonces_per_thread = nonces / threads;
 
 	// check free RAM
@@ -431,7 +430,7 @@ int main(int argc, char* argv[])
 	printf("Start_nonce:  %llu\n", startnonce);
 	printf("Nonces: %llu\n", nonces);
 	printf("Nonces per thread:  %llu\n", nonces_per_thread);
-	printf("Nonces per thread:  %llu\n", nonces_per_thread);
+
 	poc2 ? printf("POC2 Plotting enabled.\n") : printf("POC2 Plotting disabled.\n");
 
 	printf("Uses %llu Mb of %llu Mb free RAM\n", nonces_per_thread * threads * 2 * PLOT_SIZE / 1024 / 1024, freeRAM / 1024 / 1024);
