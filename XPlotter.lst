@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler (x64) Version 12.00.40629.0   01/19/18 13:12:51
+Microsoft (R) Macro Assembler (x64) Version 14.13.26129.0   05/23/18 12:36:14
 shabal.asm						     Page 1 - 1
 
 
@@ -2133,230 +2133,232 @@ shabal.asm						     Page 1 - 1
  00001B4C  B8 00000040		        mov     eax, 64                                 ; 1A3D _ B8, 00000040
  00001B51  2B C1		        sub     eax, ecx                                ; 1A42 _ 29. C8
  00001B53  48/ 3B D0		        cmp     rdx, rax                                ; 1A44 _ 48: 39. C2
- 00001B56  73 13		        jnc     Ls1                                     ; 1A47 _ 73, 14
- 00001B58  48/ 8D 3C 29		        lea     rdi, [rbp+rcx]                          ; 1A49 _ 48: 8D. 7C 0D, 00
- 00001B5C  8B CA		        mov     ecx, edx                                ; 1A4E _ 89. D1
- 00001B5E  E8 FFFFFF1D		        call    reduced_memcpy                          ; 1A50 _ E8, FFFFFF7B
- 00001B63  48/ 2B FD		        sub     rdi, rbp                                ; 1A55 _ 48: 29. EF
- 00001B66  89 7D 40		        mov     dword ptr [rbp+40H], edi                ; 1A58 _ 89. 7D, 40
- 00001B69  EB 64		        jmp     Ls9                                     ; 1A5B _ EB, 65
+ 00001B56  73 14		        jnc     Ls1                                     ; 1A47 _ 73, 14
+ 00001B58  48/ 8D 7C 0D		        lea     rdi, [rbp+rcx]                          ; 1A49 _ 48: 8D. 7C 0D, 00
+	   00
+ 00001B5D  8B CA		        mov     ecx, edx                                ; 1A4E _ 89. D1
+ 00001B5F  E8 FFFFFF1C		        call    reduced_memcpy                          ; 1A50 _ E8, FFFFFF7B
+ 00001B64  48/ 2B FD		        sub     rdi, rbp                                ; 1A55 _ 48: 29. EF
+ 00001B67  89 7D 40		        mov     dword ptr [rbp+40H], edi                ; 1A58 _ 89. 7D, 40
+ 00001B6A  EB 65		        jmp     Ls9                                     ; 1A5B _ EB, 65
 
- 00001B6B			Ls1     LABEL NEAR
- 00001B6B  48/ 8B FC		        mov     rdi, rsp                                ; 1A5D _ 48: 89. E7
- 00001B6E  E8 FFFFFF1C		        call    align_structure_enter                   ; 1A60 _ E8, FFFFFF7A
- 00001B73  85 C9		        test    ecx, ecx                                ; 1A65 _ 85. C9
- 00001B75  74 23		        jz      Ls2                                     ; 1A67 _ 74, 24
- 00001B77  48/ 2B D0		        sub     rdx, rax                                ; 1A69 _ 48: 29. C2
- 00001B7A  57			        push    rdi                                     ; 1A6C _ 57
- 00001B7B  48/ 8D 3C 29		        lea     rdi, [rbp+rcx]                          ; 1A6D _ 48: 8D. 7C 0D, 00
- 00001B7F  8B C8		        mov     ecx, eax                                ; 1A72 _ 89. C1
- 00001B81  E8 FFFFFEFA		        call    reduced_memcpy                          ; 1A74 _ E8, FFFFFF57
- 00001B86  5F			        pop     rdi                                     ; 1A79 _ 5F
- 00001B87  52			        push    rdx                                     ; 1A7A _ 52
- 00001B88  56			        push    rsi                                     ; 1A7B _ 56
- 00001B89  57			        push    rdi                                     ; 1A7C _ 57
- 00001B8A  BA 00000001		        mov     edx, 1                                  ; 1A7D _ BA, 00000001
- 00001B8F  48/ 8B F5		        mov     rsi, rbp                                ; 1A82 _ 48: 89. EE
- 00001B92  E8 FFFFE469		        call    shabal_inner                            ; 1A85 _ E8, FFFFE576
- 00001B97  5F			        pop     rdi                                     ; 1A8A _ 5F
- 00001B98  5E			        pop     rsi                                     ; 1A8B _ 5E
- 00001B99  5A			        pop     rdx                                     ; 1A8C _ 5A
+ 00001B6C			Ls1     LABEL NEAR
+ 00001B6C  48/ 8B FC		        mov     rdi, rsp                                ; 1A5D _ 48: 89. E7
+ 00001B6F  E8 FFFFFF1B		        call    align_structure_enter                   ; 1A60 _ E8, FFFFFF7A
+ 00001B74  85 C9		        test    ecx, ecx                                ; 1A65 _ 85. C9
+ 00001B76  74 24		        jz      Ls2                                     ; 1A67 _ 74, 24
+ 00001B78  48/ 2B D0		        sub     rdx, rax                                ; 1A69 _ 48: 29. C2
+ 00001B7B  57			        push    rdi                                     ; 1A6C _ 57
+ 00001B7C  48/ 8D 7C 0D		        lea     rdi, [rbp+rcx]                          ; 1A6D _ 48: 8D. 7C 0D, 00
+	   00
+ 00001B81  8B C8		        mov     ecx, eax                                ; 1A72 _ 89. C1
+ 00001B83  E8 FFFFFEF8		        call    reduced_memcpy                          ; 1A74 _ E8, FFFFFF57
+ 00001B88  5F			        pop     rdi                                     ; 1A79 _ 5F
+ 00001B89  52			        push    rdx                                     ; 1A7A _ 52
+ 00001B8A  56			        push    rsi                                     ; 1A7B _ 56
+ 00001B8B  57			        push    rdi                                     ; 1A7C _ 57
+ 00001B8C  BA 00000001		        mov     edx, 1                                  ; 1A7D _ BA, 00000001
+ 00001B91  48/ 8B F5		        mov     rsi, rbp                                ; 1A82 _ 48: 89. EE
+ 00001B94  E8 FFFFE467		        call    shabal_inner                            ; 1A85 _ E8, FFFFE576
+ 00001B99  5F			        pop     rdi                                     ; 1A8A _ 5F
+ 00001B9A  5E			        pop     rsi                                     ; 1A8B _ 5E
+ 00001B9B  5A			        pop     rdx                                     ; 1A8C _ 5A
 
- 00001B9A			Ls2     LABEL NEAR
- 00001B9A  48/ 8B C2		        mov     rax, rdx                                ; 1A8D _ 48: 89. D0
- 00001B9D  48/ C1 E8 06		        shr     rax, 6                                  ; 1A90 _ 48: C1. E8, 06
- 00001BA1  74 18		        jz      Ls3                                     ; 1A94 _ 74, 18
- 00001BA3  83 E2 3F		        and     edx, 3FH                                ; 1A96 _ 83. E2, 3F
- 00001BA6  52			        push    rdx                                     ; 1A99 _ 52
- 00001BA7  48/ 8B D0		        mov     rdx, rax                                ; 1A9A _ 48: 89. C2
- 00001BAA  48/ C1 E0 06		        shl     rax, 6                                  ; 1A9D _ 48: C1. E0, 06
- 00001BAE  48/ 03 C6		        add     rax, rsi                                ; 1AA1 _ 48: 01. F0
- 00001BB1  50			        push    rax                                     ; 1AA4 _ 50
- 00001BB2  57			        push    rdi                                     ; 1AA5 _ 57
- 00001BB3  E8 FFFFE448		        call    shabal_inner                            ; 1AA6 _ E8, FFFFE555
- 00001BB8  5F			        pop     rdi                                     ; 1AAB _ 5F
- 00001BB9  5E			        pop     rsi                                     ; 1AAC _ 5E
- 00001BBA  5A			        pop     rdx                                     ; 1AAD _ 5A
+ 00001B9C			Ls2     LABEL NEAR
+ 00001B9C  48/ 8B C2		        mov     rax, rdx                                ; 1A8D _ 48: 89. D0
+ 00001B9F  48/ C1 E8 06		        shr     rax, 6                                  ; 1A90 _ 48: C1. E8, 06
+ 00001BA3  74 18		        jz      Ls3                                     ; 1A94 _ 74, 18
+ 00001BA5  83 E2 3F		        and     edx, 3FH                                ; 1A96 _ 83. E2, 3F
+ 00001BA8  52			        push    rdx                                     ; 1A99 _ 52
+ 00001BA9  48/ 8B D0		        mov     rdx, rax                                ; 1A9A _ 48: 89. C2
+ 00001BAC  48/ C1 E0 06		        shl     rax, 6                                  ; 1A9D _ 48: C1. E0, 06
+ 00001BB0  48/ 03 C6		        add     rax, rsi                                ; 1AA1 _ 48: 01. F0
+ 00001BB3  50			        push    rax                                     ; 1AA4 _ 50
+ 00001BB4  57			        push    rdi                                     ; 1AA5 _ 57
+ 00001BB5  E8 FFFFE446		        call    shabal_inner                            ; 1AA6 _ E8, FFFFE555
+ 00001BBA  5F			        pop     rdi                                     ; 1AAB _ 5F
+ 00001BBB  5E			        pop     rsi                                     ; 1AAC _ 5E
+ 00001BBC  5A			        pop     rdx                                     ; 1AAD _ 5A
 
- 00001BBB			Ls3     LABEL NEAR
- 00001BBB  57			        push    rdi                                     ; 1AAE _ 57
- 00001BBC  48/ 8B FD		        mov     rdi, rbp                                ; 1AAF _ 48: 89. EF
- 00001BBF  8B CA		        mov     ecx, edx                                ; 1AB2 _ 89. D1
- 00001BC1  89 55 40		        mov     dword ptr [rbp+40H], edx                ; 1AB4 _ 89. 55, 40
- 00001BC4  E8 FFFFFEB7		        call    reduced_memcpy                          ; 1AB7 _ E8, FFFFFF14
- 00001BC9  5E			        pop     rsi                                     ; 1ABC _ 5E
- 00001BCA  E8 FFFFFEE5		        call    align_structure_leave                   ; 1ABD _ E8, FFFFFF42
+ 00001BBD			Ls3     LABEL NEAR
+ 00001BBD  57			        push    rdi                                     ; 1AAE _ 57
+ 00001BBE  48/ 8B FD		        mov     rdi, rbp                                ; 1AAF _ 48: 89. EF
+ 00001BC1  8B CA		        mov     ecx, edx                                ; 1AB2 _ 89. D1
+ 00001BC3  89 55 40		        mov     dword ptr [rbp+40H], edx                ; 1AB4 _ 89. 55, 40
+ 00001BC6  E8 FFFFFEB5		        call    reduced_memcpy                          ; 1AB7 _ E8, FFFFFF14
+ 00001BCB  5E			        pop     rsi                                     ; 1ABC _ 5E
+ 00001BCC  E8 FFFFFEE3		        call    align_structure_leave                   ; 1ABD _ E8, FFFFFF42
 
- 00001BCF			Ls9     LABEL NEAR
- 00001BCF  48/ 8B 84 24		        mov     rax, qword ptr [rsp+0B8H]               ; 1AC2 _ 48: 8B. 84 24, 000000B8
+ 00001BD1			Ls9     LABEL NEAR
+ 00001BD1  48/ 8B 84 24		        mov     rax, qword ptr [rsp+0B8H]               ; 1AC2 _ 48: 8B. 84 24, 000000B8
 	   000000B8
- 00001BD7  48/ 8B E0		        mov     rsp, rax                                ; 1ACA _ 48: 89. C4
- 00001BDA  5D			        pop     rbp                                     ; 1ACD _ 5D
+ 00001BD9  48/ 8B E0		        mov     rsp, rax                                ; 1ACA _ 48: 89. C4
+ 00001BDC  5D			        pop     rbp                                     ; 1ACD _ 5D
 
 
 				  ; Restore saved registers
- 00001BDB  48/ 8B 34 24		  mov     rsi,   [rsp]
- 00001BDF  48/ 8B 7C 24		  mov     rdi,   [rsp+8]
+ 00001BDD  48/ 8B 34 24		  mov     rsi,   [rsp]
+ 00001BE1  48/ 8B 7C 24		  mov     rdi,   [rsp+8]
 	   08
- 00001BE4  0F 28 74 24 10	  movaps  xmm6,  [rsp+10h]
- 00001BE9  0F 28 7C 24 20	  movaps  xmm7,  [rsp+20h] 
- 00001BEE  44/ 0F 28 44 24	  movaps  xmm8,  [rsp+30h] 
+ 00001BE6  0F 28 74 24 10	  movaps  xmm6,  [rsp+10h]
+ 00001BEB  0F 28 7C 24 20	  movaps  xmm7,  [rsp+20h] 
+ 00001BF0  44/ 0F 28 44 24	  movaps  xmm8,  [rsp+30h] 
 	   30
- 00001BF4  44/ 0F 28 4C 24	  movaps  xmm9,  [rsp+40h] 
+ 00001BF6  44/ 0F 28 4C 24	  movaps  xmm9,  [rsp+40h] 
 	   40
- 00001BFA  44/ 0F 28 54 24	  movaps  xmm10, [rsp+50h] 
+ 00001BFC  44/ 0F 28 54 24	  movaps  xmm10, [rsp+50h] 
 	   50
- 00001C00  44/ 0F 28 5C 24	  movaps  xmm11, [rsp+60h] 
+ 00001C02  44/ 0F 28 5C 24	  movaps  xmm11, [rsp+60h] 
 	   60
- 00001C06  44/ 0F 28 64 24	  movaps  xmm12, [rsp+70h] 
+ 00001C08  44/ 0F 28 64 24	  movaps  xmm12, [rsp+70h] 
 	   70
- 00001C0C  44/ 0F 28 AC 24	  movaps  xmm13, [rsp+80h] 
+ 00001C0E  44/ 0F 28 AC 24	  movaps  xmm13, [rsp+80h] 
 	   00000080
- 00001C15  44/ 0F 28 B4 24	  movaps  xmm14, [rsp+90h] 
+ 00001C17  44/ 0F 28 B4 24	  movaps  xmm14, [rsp+90h] 
 	   00000090
- 00001C1E  44/ 0F 28 BC 24	  movaps  xmm15, [rsp+0A0h]        
+ 00001C20  44/ 0F 28 BC 24	  movaps  xmm15, [rsp+0A0h]        
 	   000000A0
 				        
 				  ; restore stack pointer
- 00001C27  48/ 81 C4		  add     rsp, 184
+ 00001C29  48/ 81 C4		  add     rsp, 184
 	   000000B8
 
- 00001C2E  C3			        ret                                             ; 1ACE _ C3
- 00001C2F			shabal  ENDP
+ 00001C30  C3			        ret                                             ; 1ACE _ C3
+ 00001C31			shabal  ENDP
 
- 00001C2F			shabal_close PROC
+ 00001C31			shabal_close PROC
 				                 
 				  ; Make space for 10 xmm registers, 2 G.P. registers, 
 				  ; and align stack by 16
- 00001C2F  48/ 81 EC		  sub     rsp, 184;   10*16 + 2*8 + 8
+ 00001C31  48/ 81 EC		  sub     rsp, 184;   10*16 + 2*8 + 8
 	   000000B8
 				        
 				  ; Register rsi, rdi and xmm6 - xmm15 have callee-save status
 				  ; in Windows, but not in Unix:
- 00001C36  48/ 89 34 24		  mov     [rsp],     rsi
- 00001C3A  48/ 89 7C 24		  mov     [rsp+8],   rdi
+ 00001C38  48/ 89 34 24		  mov     [rsp],     rsi
+ 00001C3C  48/ 89 7C 24		  mov     [rsp+8],   rdi
 	   08
- 00001C3F  0F 29 74 24 10	  movaps  [rsp+10h], xmm6
- 00001C44  0F 29 7C 24 20	  movaps  [rsp+20h], xmm7
- 00001C49  44/ 0F 29 44 24	  movaps  [rsp+30h], xmm8
+ 00001C41  0F 29 74 24 10	  movaps  [rsp+10h], xmm6
+ 00001C46  0F 29 7C 24 20	  movaps  [rsp+20h], xmm7
+ 00001C4B  44/ 0F 29 44 24	  movaps  [rsp+30h], xmm8
 	   30
- 00001C4F  44/ 0F 29 4C 24	  movaps  [rsp+40h], xmm9
+ 00001C51  44/ 0F 29 4C 24	  movaps  [rsp+40h], xmm9
 	   40
- 00001C55  44/ 0F 29 54 24	  movaps  [rsp+50h], xmm10
+ 00001C57  44/ 0F 29 54 24	  movaps  [rsp+50h], xmm10
 	   50
- 00001C5B  44/ 0F 29 5C 24	  movaps  [rsp+60h], xmm11
+ 00001C5D  44/ 0F 29 5C 24	  movaps  [rsp+60h], xmm11
 	   60
- 00001C61  44/ 0F 29 64 24	  movaps  [rsp+70h], xmm12
+ 00001C63  44/ 0F 29 64 24	  movaps  [rsp+70h], xmm12
 	   70
- 00001C67  44/ 0F 29 AC 24	  movaps  [rsp+80h], xmm13
+ 00001C69  44/ 0F 29 AC 24	  movaps  [rsp+80h], xmm13
 	   00000080
- 00001C70  44/ 0F 29 B4 24	  movaps  [rsp+90h], xmm14
+ 00001C72  44/ 0F 29 B4 24	  movaps  [rsp+90h], xmm14
 	   00000090
- 00001C79  44/ 0F 29 BC 24	  movaps  [rsp+0A0h],xmm15
+ 00001C7B  44/ 0F 29 BC 24	  movaps  [rsp+0A0h],xmm15
 	   000000A0
 
 				  ; Windows parameters (rcx,rdx,r8,r9) -> Unix parameters (rdi,rsi,rdx,rcx)
- 00001C82  48/ 8B F9		  mov     rdi, rcx
- 00001C85  48/ 8B F2		  mov     rsi, rdx
- 00001C88  49/ 8B D0		  mov     rdx, r8
- 00001C8B  49/ 8B C9		  mov     rcx, r9    
+ 00001C84  48/ 8B F9		  mov     rdi, rcx
+ 00001C87  48/ 8B F2		  mov     rsi, rdx
+ 00001C8A  49/ 8B D0		  mov     rdx, r8
+ 00001C8D  49/ 8B C9		  mov     rcx, r9    
 
 
- 00001C8E  53			        push    rbx                                     ; 1ACF _ 53
- 00001C8F  55			        push    rbp                                     ; 1AD0 _ 55
- 00001C90  48/ 8B EF		        mov     rbp, rdi                                ; 1AD1 _ 48: 89. FD
- 00001C93  51			        push    rcx                                     ; 1AD4 _ 51
- 00001C94  52			        push    rdx                                     ; 1AD5 _ 52
- 00001C95  56			        push    rsi                                     ; 1AD6 _ 56
- 00001C96  5A			        pop     rdx                                     ; 1AD7 _ 5A
- 00001C97  59			        pop     rcx                                     ; 1AD8 _ 59
- 00001C98  5E			        pop     rsi                                     ; 1AD9 _ 5E
- 00001C99  48/ 8B C4		        mov     rax, rsp                                ; 1ADA _ 48: 89. E0
- 00001C9C  48/ 81 EC		        sub     rsp, 144                                ; 1ADD _ 48: 81. EC, 00000090
+ 00001C90  53			        push    rbx                                     ; 1ACF _ 53
+ 00001C91  55			        push    rbp                                     ; 1AD0 _ 55
+ 00001C92  48/ 8B EF		        mov     rbp, rdi                                ; 1AD1 _ 48: 89. FD
+ 00001C95  51			        push    rcx                                     ; 1AD4 _ 51
+ 00001C96  52			        push    rdx                                     ; 1AD5 _ 52
+ 00001C97  56			        push    rsi                                     ; 1AD6 _ 56
+ 00001C98  5A			        pop     rdx                                     ; 1AD7 _ 5A
+ 00001C99  59			        pop     rcx                                     ; 1AD8 _ 59
+ 00001C9A  5E			        pop     rsi                                     ; 1AD9 _ 5E
+ 00001C9B  48/ 8B C4		        mov     rax, rsp                                ; 1ADA _ 48: 89. E0
+ 00001C9E  48/ 81 EC		        sub     rsp, 144                                ; 1ADD _ 48: 81. EC, 00000090
 	   00000090
- 00001CA3  48/ 83 E4 C0		        and     rsp, 0FFFFFFFFFFFFFFC0H                 ; 1AE4 _ 48: 83. E4, C0
- 00001CA7  48/ 83 EC 30		        sub     rsp, 48                                 ; 1AE8 _ 48: 83. EC, 30
- 00001CAB  48/ 89 84 24		        mov     qword ptr [rsp+0B8H], rax               ; 1AEC _ 48: 89. 84 24, 000000B8
+ 00001CA5  48/ 83 E4 C0		        and     rsp, 0FFFFFFFFFFFFFFC0H                 ; 1AE4 _ 48: 83. E4, C0
+ 00001CA9  48/ 83 EC 30		        sub     rsp, 48                                 ; 1AE8 _ 48: 83. EC, 30
+ 00001CAD  48/ 89 84 24		        mov     qword ptr [rsp+0B8H], rax               ; 1AEC _ 48: 89. 84 24, 000000B8
 	   000000B8
- 00001CB3  B8 00000080		        mov     eax, 128                                ; 1AF4 _ B8, 00000080
- 00001CB8  D3 E8		        shr     eax, cl                                 ; 1AF9 _ D3. E8
- 00001CBA  0B D0		        or      edx, eax                                ; 1AFB _ 09. C2
- 00001CBC  F7 D8		        neg     eax                                     ; 1AFD _ F7. D8
- 00001CBE  23 C2		        and     eax, edx                                ; 1AFF _ 21. D0
- 00001CC0  48/ 8B FD		        mov     rdi, rbp                                ; 1B01 _ 48: 89. EF
- 00001CC3  8B 4D 40		        mov     ecx, dword ptr [rbp+40H]                ; 1B04 _ 8B. 4D, 40
- 00001CC6  48/ 03 F9		        add     rdi, rcx                                ; 1B07 _ 48: 01. CF
- 00001CC9  AA			        stosb                                           ; 1B0A _ AA
- 00001CCA  F7 D9		        neg     ecx                                     ; 1B0B _ F7. D9
- 00001CCC  33 C0		        xor     eax, eax                                ; 1B0D _ 31. C0
- 00001CCE  83 C1 46		        add     ecx, 70                                 ; 1B0F _ 83. C1, 46
- 00001CD1  C1 E9 03		        shr     ecx, 3                                  ; 1B12 _ C1. E9, 03
- 00001CD4  F3/ 48/ AB		        rep stosq                                       ; 1B15 _ F2 48: AB
- 00001CD7  48/ 8B FC		        mov     rdi, rsp                                ; 1B18 _ 48: 89. E7
- 00001CDA  E8 FFFFFDB0		        call    align_structure_enter                   ; 1B1B _ E8, FFFFFEBF
- 00001CDF  56			        push    rsi                                     ; 1B20 _ 56
- 00001CE0  BB 00000004		        mov     ebx, 4                                  ; 1B21 _ BB, 00000004
+ 00001CB5  B8 00000080		        mov     eax, 128                                ; 1AF4 _ B8, 00000080
+ 00001CBA  D3 E8		        shr     eax, cl                                 ; 1AF9 _ D3. E8
+ 00001CBC  0B D0		        or      edx, eax                                ; 1AFB _ 09. C2
+ 00001CBE  F7 D8		        neg     eax                                     ; 1AFD _ F7. D8
+ 00001CC0  23 C2		        and     eax, edx                                ; 1AFF _ 21. D0
+ 00001CC2  48/ 8B FD		        mov     rdi, rbp                                ; 1B01 _ 48: 89. EF
+ 00001CC5  8B 4D 40		        mov     ecx, dword ptr [rbp+40H]                ; 1B04 _ 8B. 4D, 40
+ 00001CC8  48/ 03 F9		        add     rdi, rcx                                ; 1B07 _ 48: 01. CF
+ 00001CCB  AA			        stosb                                           ; 1B0A _ AA
+ 00001CCC  F7 D9		        neg     ecx                                     ; 1B0B _ F7. D9
+ 00001CCE  33 C0		        xor     eax, eax                                ; 1B0D _ 31. C0
+ 00001CD0  83 C1 46		        add     ecx, 70                                 ; 1B0F _ 83. C1, 46
+ 00001CD3  C1 E9 03		        shr     ecx, 3                                  ; 1B12 _ C1. E9, 03
+ 00001CD6  F3/ 48/ AB		        rep stosq                                       ; 1B15 _ F2 48: AB
+ 00001CD9  48/ 8B FC		        mov     rdi, rsp                                ; 1B18 _ 48: 89. E7
+ 00001CDC  E8 FFFFFDAE		        call    align_structure_enter                   ; 1B1B _ E8, FFFFFEBF
+ 00001CE1  56			        push    rsi                                     ; 1B20 _ 56
+ 00001CE2  BB 00000004		        mov     ebx, 4                                  ; 1B21 _ BB, 00000004
 
- 00001CE5			Lc1     LABEL NEAR
- 00001CE5  BA 00000001		        mov     edx, 1                                  ; 1B26 _ BA, 00000001
- 00001CEA  48/ 8B F5		        mov     rsi, rbp                                ; 1B2B _ 48: 89. EE
- 00001CED  57			        push    rdi                                     ; 1B2E _ 57
- 00001CEE  E8 FFFFE30D		        call    shabal_inner                            ; 1B2F _ E8, FFFFE4CC
- 00001CF3  5F			        pop     rdi                                     ; 1B34 _ 5F
- 00001CF4  48/ FF 8F		        dec     qword ptr [rdi+0B0H]                    ; 1B35 _ 48: FF. 8F, 000000B0
+ 00001CE7			Lc1     LABEL NEAR
+ 00001CE7  BA 00000001		        mov     edx, 1                                  ; 1B26 _ BA, 00000001
+ 00001CEC  48/ 8B F5		        mov     rsi, rbp                                ; 1B2B _ 48: 89. EE
+ 00001CEF  57			        push    rdi                                     ; 1B2E _ 57
+ 00001CF0  E8 FFFFE30B		        call    shabal_inner                            ; 1B2F _ E8, FFFFE4CC
+ 00001CF5  5F			        pop     rdi                                     ; 1B34 _ 5F
+ 00001CF6  48/ FF 8F		        dec     qword ptr [rdi+0B0H]                    ; 1B35 _ 48: FF. 8F, 000000B0
 	   000000B0
- 00001CFB  FF CB		        dec     ebx                                     ; 1B3C _ FF. CB
- 00001CFD  75 E6		        jnz     Lc1                                     ; 1B3E _ 75, E6
- 00001CFF  8B 85 00000100	        mov     eax, dword ptr [rbp+100H]               ; 1B40 _ 8B. 85, 00000100
- 00001D05  8B C8		        mov     ecx, eax                                ; 1B46 _ 89. C1
- 00001D07  C1 E8 03		        shr     eax, 3                                  ; 1B48 _ C1. E8, 03
- 00001D0A  C1 E9 05		        shr     ecx, 5                                  ; 1B4B _ C1. E9, 05
- 00001D0D  48/ 8D B7		        lea     rsi, [rdi+0B0H]                         ; 1B4E _ 48: 8D. B7, 000000B0
+ 00001CFD  FF CB		        dec     ebx                                     ; 1B3C _ FF. CB
+ 00001CFF  75 E6		        jnz     Lc1                                     ; 1B3E _ 75, E6
+ 00001D01  8B 85 00000100	        mov     eax, dword ptr [rbp+100H]               ; 1B40 _ 8B. 85, 00000100
+ 00001D07  8B C8		        mov     ecx, eax                                ; 1B46 _ 89. C1
+ 00001D09  C1 E8 03		        shr     eax, 3                                  ; 1B48 _ C1. E8, 03
+ 00001D0C  C1 E9 05		        shr     ecx, 5                                  ; 1B4B _ C1. E9, 05
+ 00001D0F  48/ 8D B7		        lea     rsi, [rdi+0B0H]                         ; 1B4E _ 48: 8D. B7, 000000B0
 	   000000B0
- 00001D14  5F			        pop     rdi                                     ; 1B55 _ 5F
- 00001D15  48/ 2B F0		        sub     rsi, rax                                ; 1B56 _ 48: 29. C6
- 00001D18  F3/ A5		        rep movsd                                       ; 1B59 _ F3: A5
- 00001D1A  48/ 8B 84 24		        mov     rax, qword ptr [rsp+0B8H]               ; 1B5B _ 48: 8B. 84 24, 000000B8
+ 00001D16  5F			        pop     rdi                                     ; 1B55 _ 5F
+ 00001D17  48/ 2B F0		        sub     rsi, rax                                ; 1B56 _ 48: 29. C6
+ 00001D1A  F3/ A5		        rep movsd                                       ; 1B59 _ F3: A5
+ 00001D1C  48/ 8B 84 24		        mov     rax, qword ptr [rsp+0B8H]               ; 1B5B _ 48: 8B. 84 24, 000000B8
 	   000000B8
- 00001D22  48/ 8B E0		        mov     rsp, rax                                ; 1B63 _ 48: 89. C4
- 00001D25  5D			        pop     rbp                                     ; 1B66 _ 5D
- 00001D26  5B			        pop     rbx                                     ; 1B67 _ 5B
+ 00001D24  48/ 8B E0		        mov     rsp, rax                                ; 1B63 _ 48: 89. C4
+ 00001D27  5D			        pop     rbp                                     ; 1B66 _ 5D
+ 00001D28  5B			        pop     rbx                                     ; 1B67 _ 5B
 
 
 				  ; Restore saved registers
- 00001D27  48/ 8B 34 24		  mov     rsi,   [rsp]
- 00001D2B  48/ 8B 7C 24		  mov     rdi,   [rsp+8]
+ 00001D29  48/ 8B 34 24		  mov     rsi,   [rsp]
+ 00001D2D  48/ 8B 7C 24		  mov     rdi,   [rsp+8]
 	   08
- 00001D30  0F 28 74 24 10	  movaps  xmm6,  [rsp+10h]
- 00001D35  0F 28 7C 24 20	  movaps  xmm7,  [rsp+20h] 
- 00001D3A  44/ 0F 28 44 24	  movaps  xmm8,  [rsp+30h] 
+ 00001D32  0F 28 74 24 10	  movaps  xmm6,  [rsp+10h]
+ 00001D37  0F 28 7C 24 20	  movaps  xmm7,  [rsp+20h] 
+ 00001D3C  44/ 0F 28 44 24	  movaps  xmm8,  [rsp+30h] 
 	   30
- 00001D40  44/ 0F 28 4C 24	  movaps  xmm9,  [rsp+40h] 
+ 00001D42  44/ 0F 28 4C 24	  movaps  xmm9,  [rsp+40h] 
 	   40
- 00001D46  44/ 0F 28 54 24	  movaps  xmm10, [rsp+50h] 
+ 00001D48  44/ 0F 28 54 24	  movaps  xmm10, [rsp+50h] 
 	   50
- 00001D4C  44/ 0F 28 5C 24	  movaps  xmm11, [rsp+60h] 
+ 00001D4E  44/ 0F 28 5C 24	  movaps  xmm11, [rsp+60h] 
 	   60
- 00001D52  44/ 0F 28 64 24	  movaps  xmm12, [rsp+70h] 
+ 00001D54  44/ 0F 28 64 24	  movaps  xmm12, [rsp+70h] 
 	   70
- 00001D58  44/ 0F 28 AC 24	  movaps  xmm13, [rsp+80h] 
+ 00001D5A  44/ 0F 28 AC 24	  movaps  xmm13, [rsp+80h] 
 	   00000080
- 00001D61  44/ 0F 28 B4 24	  movaps  xmm14, [rsp+90h] 
+ 00001D63  44/ 0F 28 B4 24	  movaps  xmm14, [rsp+90h] 
 	   00000090
- 00001D6A  44/ 0F 28 BC 24	  movaps  xmm15, [rsp+0A0h]        
+ 00001D6C  44/ 0F 28 BC 24	  movaps  xmm15, [rsp+0A0h]        
 	   000000A0
 				        
 				  ; restore stack pointer
- 00001D73  48/ 81 C4		  add     rsp, 184
+ 00001D75  48/ 81 C4		  add     rsp, 184
 	   000000B8
 
- 00001D7A  C3			        ret                                             ; 1B68 _ C3
- 00001D7B			shabal_close ENDP
+ 00001D7C  C3			        ret                                             ; 1B68 _ C3
+ 00001D7D			shabal_close ENDP
 
- 00001D7B			_text   ENDS
+ 00001D7D			_text   ENDS
 
 				END
-Microsoft (R) Macro Assembler (x64) Version 12.00.40629.0   01/19/18 13:12:51
+Microsoft (R) Macro Assembler (x64) Version 14.13.26129.0   05/23/18 12:36:14
 shabal.asm						     Symbols 2 - 1
 
 
@@ -2366,9 +2368,9 @@ Procedures, parameters, and locals:
 
                 N a m e                 Type     Value    Attr
 
-shabal_close . . . . . . . . . .	P 	 00001C2F _TEXT	Length= 0000014C Public
+shabal_close . . . . . . . . . .	P 	 00001C31 _TEXT	Length= 0000014C Public
 shabal_init  . . . . . . . . . .	P 	 00000E8D _TEXT	Length= 000000F2 Public
-shabal . . . . . . . . . . . . .	P 	 00001ACC _TEXT	Length= 00000163 Public
+shabal . . . . . . . . . . . . .	P 	 00001ACC _TEXT	Length= 00000165 Public
 
 
 Symbols:
@@ -2377,13 +2379,13 @@ Symbols:
 
 Lase1  . . . . . . . . . . . . .	L 	 00001AA1 _TEXT	
 Lasl1  . . . . . . . . . . . . .	L 	 00001ACA _TEXT	
-Lc1  . . . . . . . . . . . . . .	L 	 00001CE5 _TEXT	
+Lc1  . . . . . . . . . . . . . .	L 	 00001CE7 _TEXT	
 Li1  . . . . . . . . . . . . . .	L 	 00000EF3 _TEXT	
 Lm0  . . . . . . . . . . . . . .	L 	 00000028 _TEXT	
-Ls1  . . . . . . . . . . . . . .	L 	 00001B6B _TEXT	
-Ls2  . . . . . . . . . . . . . .	L 	 00001B9A _TEXT	
-Ls3  . . . . . . . . . . . . . .	L 	 00001BBB _TEXT	
-Ls9  . . . . . . . . . . . . . .	L 	 00001BCF _TEXT	
+Ls1  . . . . . . . . . . . . . .	L 	 00001B6C _TEXT	
+Ls2  . . . . . . . . . . . . . .	L 	 00001B9C _TEXT	
+Ls3  . . . . . . . . . . . . . .	L 	 00001BBD _TEXT	
+Ls9  . . . . . . . . . . . . . .	L 	 00001BD1 _TEXT	
 align_structure_enter  . . . . .	L 	 00001A8F _TEXT	
 align_structure_leave  . . . . .	L 	 00001AB4 _TEXT	
 iv . . . . . . . . . . . . . . .	Byte	 00000F80 _TEXT	

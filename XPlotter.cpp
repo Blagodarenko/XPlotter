@@ -11,6 +11,7 @@ HANDLE ofile = nullptr;
 HANDLE ofile_stream = nullptr;
 std::vector<size_t> worker_status;
 unsigned long long written_scoops = 0;
+bool poc2 = false;
 
 
 void printColouredMessage(std::string message, WORD colour) {
@@ -100,6 +101,21 @@ void writer_i(const unsigned long long offset, const unsigned long long nonces_t
 #endif
 
 	written_scoops = 0;
+	//Convert to Poc2
+	if (poc2) {
+		char *buffer = new char[32];
+
+		
+		for (size_t scoop = 0; scoop < HASH_CAP / 2; scoop++) {
+			for (unsigned long t = 0;t < SCOOP_SIZE * nonces_to_write;t += 64) {
+				memcpy(buffer, &cache_write[scoop][t + 32], 32);
+				memcpy(&cache_write[scoop][t + 32], &cache_write[4095 - scoop][t + 32], 32);
+				memcpy(&cache_write[4095 - scoop][t + 32], buffer, 32);
+			}
+		}
+
+		delete[] buffer;
+	}
 
 	for (size_t scoop = 0; scoop < HASH_CAP; scoop++)
 	{
@@ -227,7 +243,7 @@ int main(int argc, char* argv[])
 	unsigned long long nonces_per_thread = 0;
 	unsigned long long memory = 0;
 	std::string out_path = "";
-
+	
 	std::thread writer;
 	std::vector<std::thread> workers;
 	unsigned long long start_timer = 0;
@@ -240,7 +256,7 @@ int main(int argc, char* argv[])
 
 	if (argc < 2)
 	{
-		printf("Usage: %s -id <ID> -sn <start_nonce> [-n <nonces>] -t <threads> [-path <d:\\plots>] [-mem <8G>]\n", argv[0]);
+		printf("Usage: %s -id <ID> -sn <start_nonce> [-n <nonces>] -t <threads> [-path <d:\\plots>] [-mem <8G>] [-poc2] \n", argv[0]);
 		printf("         <ID> = your numeric acount id\n");
 		printf("         <start_nonce> = where you want to start plotting.\n");
 		printf("                         If this is your first HDD then set it to 0, other wise set it to your last hdd's <start_nonce> + <nonces>\n");
@@ -249,6 +265,7 @@ int main(int argc, char* argv[])
 		printf("         <threads> = how many CPU threads you want to utilise\n");
 		printf("         -path = the place where plots will be written\n");
 		printf("         -mem = how much memory you will use\n");
+		printf("         -poc2 = plot POC2 files\n");
 		printf("\nExample:\n %s -id 17930413153828766298 -sn 600000000 -n 1000000 -t 6 -path H:\\plots\n", argv[0]);
 		exit(-1);
 	}
@@ -262,7 +279,7 @@ int main(int argc, char* argv[])
 	for (auto & it : args)								//make all parameters to lower case
 		for (auto & c : it) c = tolower(c);
 
-	for (size_t i = 1; i < args.size() - 1; i++)
+	for (size_t i = 1; i < args.size(); i++)
 	{
 		if ((args[i] == "-id") && is_number(args[++i]))
 			addr = strtoull(args[i].c_str(), 0, 10);
@@ -274,6 +291,8 @@ int main(int argc, char* argv[])
 			threads = strtoull(args[i].c_str(), 0, 10);
 		if (args[i] == "-path")
 			out_path = args[++i];
+		if (args[i] == "-poc2")
+			poc2 = true;
 		if (args[i] == "-mem")
 		{
 				i++;
@@ -330,9 +349,14 @@ int main(int argc, char* argv[])
 
 	// ajusting nonces 
 	nonces = (nonces / (bytesPerSector / SCOOP_SIZE)) * (bytesPerSector / SCOOP_SIZE);
-
-	std::string filename = std::to_string(addr) + "_" + std::to_string(startnonce) + "_" + std::to_string(nonces) + "_" + std::to_string(nonces);
 	
+	std::string filename = "";
+	if (poc2) {
+		filename = std::to_string(addr) + "_" + std::to_string(startnonce) + "_" + std::to_string(nonces);
+	}
+	else {
+		filename = std::to_string(addr) + "_" + std::to_string(startnonce) + "_" + std::to_string(nonces) + "_" + std::to_string(nonces);
+	}
 	BOOL granted = SetPrivilege();
 
 	ofile_stream = CreateFileA((out_path + filename + ":stream").c_str(), GENERIC_WRITE | GENERIC_READ, FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE, 0, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
@@ -402,14 +426,16 @@ int main(int argc, char* argv[])
 	//ajusting
 	nonces_per_thread = (nonces_per_thread / (bytesPerSector / SCOOP_SIZE)) * (bytesPerSector / SCOOP_SIZE);
 
-	SetConsoleTextAttribute(hConsole, colour::BLUE);
+	SetConsoleTextAttribute(hConsole, colour::TEAL);
 	printf("ID:  %llu\n", addr);
 	printf("Start_nonce:  %llu\n", startnonce);
 	printf("Nonces: %llu\n", nonces);
 	printf("Nonces per thread:  %llu\n", nonces_per_thread);
+	printf("Nonces per thread:  %llu\n", nonces_per_thread);
+    poc2 ? printf("POC2 Plotting enabled.\n") : printf("POC2 Plotting disabled.\n");
 
-	SetConsoleTextAttribute(hConsole, colour::TEAL);
 	printf("Uses %llu Mb of %llu Mb free RAM\n", nonces_per_thread * threads * 2 * PLOT_SIZE / 1024 / 1024, freeRAM / 1024 / 1024);
+
 
 	SetConsoleTextAttribute(hConsole, colour::DARKGRAY);
 	printf("Allocating memory for nonces... ");
@@ -462,13 +488,16 @@ int main(int argc, char* argv[])
 
 		for (size_t i = 0; i < threads; i++)
 		{
-		#ifdef __AVX__
-			std::thread th(std::thread(AVX1::work_i, i, addr, startnonce + nonces_done + i*nonces_per_thread, nonces_per_thread));
-		#elif __AVX2__
+		#ifdef __AVX2__
 			std::thread th(std::thread(AVX2::work_i, i, addr, startnonce + nonces_done + i * nonces_per_thread, nonces_per_thread));
 		#else
-			std::thread th(std::thread(SSE4::work_i, i, addr, startnonce + nonces_done + i*nonces_per_thread, nonces_per_thread));
-		#endif
+			#ifdef __AVX__
+				std::thread th(std::thread(AVX1::work_i, i, addr, startnonce + nonces_done + i * nonces_per_thread, nonces_per_thread));
+			#else
+				std::thread th(std::thread(SSE4::work_i, i, addr, startnonce + nonces_done + i * nonces_per_thread, nonces_per_thread));
+			#endif
+		#endif 
+
 			workers.push_back(move(th));
 			worker_status.push_back(0);
 		}
