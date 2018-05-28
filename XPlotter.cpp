@@ -271,9 +271,11 @@ int main(int argc, char* argv[])
 	}
 
 	SetConsoleTextAttribute(hConsole, colour::GREEN);
-	printf("\nXPlotter v1.0 for BURST\n");
+	printf("\nXPlotter v1.2 for BURST\n");
 	SetConsoleTextAttribute(hConsole, colour::DARKGREEN);
-	printf("\t\tprogrammers: Blago, Cerr Janror, DCCT\n\n");
+	printf("\t\tprogrammers: Blago, Cerr Janror, DCCT\n");
+	printf("\t\tPOC2 modder: Johnny (5/2018)\n\n");
+
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 	std::vector<std::string> args(argv, &argv[(size_t)argc]);	//copy all parameters to args
 	for (auto & it : args)								//make all parameters to lower case
@@ -430,7 +432,6 @@ int main(int argc, char* argv[])
 	printf("ID:  %llu\n", addr);
 	printf("Start_nonce:  %llu\n", startnonce);
 	printf("Nonces: %llu\n", nonces);
-	printf("Nonces per thread:  %llu\n", nonces_per_thread);
 	printf("Nonces per thread:  %llu\n", nonces_per_thread);
 	poc2 ? printf("POC2 Plotting enabled.\n") : printf("POC2 Plotting disabled.\n");
 
