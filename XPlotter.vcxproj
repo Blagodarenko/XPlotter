@@ -168,7 +168,6 @@
       <BrowseInformation>true</BrowseInformation>
       <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <OmitFramePointers>true</OmitFramePointers>
-      <FloatingPointModel>Fast</FloatingPointModel>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <CompileAs>Default</CompileAs>

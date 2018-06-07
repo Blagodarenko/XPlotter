@@ -1,4 +1,4 @@
-Microsoft (R) Macro Assembler (x64) Version 14.00.24231.0   05/28/18 14:18:03
+Microsoft (R) Macro Assembler (x64) Version 14.00.24231.0   05/31/18 10:59:12
 shabal.asm						     Page 1 - 1
 
 
@@ -2356,7 +2356,7 @@ shabal.asm						     Page 1 - 1
  00001D7B			_text   ENDS
 
 				END
-Microsoft (R) Macro Assembler (x64) Version 14.00.24231.0   05/28/18 14:18:03
+Microsoft (R) Macro Assembler (x64) Version 14.00.24231.0   05/31/18 10:59:12
 shabal.asm						     Symbols 2 - 1
 
 
