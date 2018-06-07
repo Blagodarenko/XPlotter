@@ -164,7 +164,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <EnableParallelCodeGeneration>true</EnableParallelCodeGeneration>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions2</EnableEnhancedInstructionSet>
       <BrowseInformation>true</BrowseInformation>
       <AssemblerOutput>AssemblyAndSourceCode</AssemblerOutput>
       <OmitFramePointers>true</OmitFramePointers>
@@ -173,6 +173,7 @@
       <CompileAs>Default</CompileAs>
       <SDLCheck>true</SDLCheck>
       <StructMemberAlignment>Default</StructMemberAlignment>
+      <FloatingPointModel>Fast</FloatingPointModel>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -210,6 +211,7 @@
     <ClInclude Include="shabal.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="mshabal256_avx2.c" />
     <ClCompile Include="mshabal_avx1.c" />
     <ClCompile Include="mshabal_avx2.c" />
     <ClCompile Include="mshabal_sse4.c" />
