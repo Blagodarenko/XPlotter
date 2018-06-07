@@ -108,6 +108,7 @@ void writer_i(const unsigned long long offset, const unsigned long long nonces_t
 
 		delete[] buffer;
 	}
+
 	for (size_t scoop = 0; scoop < HASH_CAP; scoop++)
 	{
 		liDistanceToMove.QuadPart = (scoop*glob_nonces + offset) * SCOOP_SIZE;
@@ -121,7 +122,7 @@ void writer_i(const unsigned long long offset, const unsigned long long nonces_t
 			printLastError(" Failed WriteFile");
 			exit(-1);
 		}
-		written_scoops = scoop+1;
+		written_scoops = scoop + 1;
 	}
 	if (supports_streams == 1) write_to_stream(offset + nonces_to_write);
 	return;
@@ -171,6 +172,7 @@ unsigned long long read_from_stream()
     //printf(" read_from_stream = %llu\n", buf);
 	return buf;
 }
+
 
 
 bool is_number(const std::string& s)
@@ -272,9 +274,10 @@ int main(int argc, char* argv[])
 	SetConsoleTextAttribute(hConsole, colour::DARKGREEN);
 	printf("\t\tprogrammers: Blago, Cerr Janror, DCCT\n");
 	printf("\t\tPOC2 modder: Johnny (5/2018)\n\n");
+
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 	std::vector<std::string> args(argv, &argv[(size_t)argc]);	//copy all parameters to args
-	for (auto & it : args)										//make all parameters to lower case
+	for (auto & it : args)								//make all parameters to lower case
 		for (auto & c : it) c = tolower(c);
 
 	for (size_t i = 1; i < args.size(); i++)
@@ -349,14 +352,21 @@ int main(int argc, char* argv[])
 	printf("\tBytes per Sector: %u\n", bytesPerSector);
 	printf("\tSectors per Cluster: %u\n", sectorsPerCluster);
 
+
+
 	// whole free space
 	if (nonces == 0) 	nonces = getFreeSpace(out_path.c_str()) / PLOT_SIZE;
 
 	// ajusting nonces 
 	nonces = (nonces / (bytesPerSector / SCOOP_SIZE)) * (bytesPerSector / SCOOP_SIZE);
-	std::string filename = std::to_string(addr) + "_" + std::to_string(startnonce) + "_" + std::to_string(nonces) + "_" + std::to_string(nonces);
-	supports_streams = drive_info(out_path);
-	
+
+	std::string filename = "";
+	if (poc2) {
+		filename = std::to_string(addr) + "_" + std::to_string(startnonce) + "_" + std::to_string(nonces);
+	}
+	else {
+		filename = std::to_string(addr) + "_" + std::to_string(startnonce) + "_" + std::to_string(nonces) + "_" + std::to_string(nonces);
+	}
 	BOOL granted = SetPrivilege();
 
 	if (supports_streams == 1)
@@ -419,12 +429,16 @@ int main(int argc, char* argv[])
 	unsigned long long freeRAM = getTotalSystemMemory();
 
 	if (memory) nonces_per_thread = memory * 2 / threads;
-	else nonces_per_thread = 1024;
+	else nonces_per_thread = 1024; //(bytesPerSector / SCOOP_SIZE) * 1024 / threads;
 	
 	if (nonces < nonces_per_thread * threads) 	nonces_per_thread = nonces / threads;
 
+	// check free RAM
 	if (freeRAM < nonces_per_thread * threads * PLOT_SIZE * 2) nonces_per_thread = freeRAM / threads / PLOT_SIZE / 2;
+	
+	//ajusting
 	nonces_per_thread = (nonces_per_thread / (bytesPerSector / SCOOP_SIZE)) * (bytesPerSector / SCOOP_SIZE);
+
 	SetConsoleTextAttribute(hConsole, colour::TEAL);
 	printf("ID:  %llu\n", addr);
 	printf("Start_nonce:  %llu\n", startnonce);
@@ -455,6 +469,7 @@ int main(int argc, char* argv[])
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 
 
+
 	unsigned long long t_timer;
 	unsigned long long x = 0;
 	unsigned long long leftover = 0;
@@ -468,9 +483,10 @@ int main(int argc, char* argv[])
 		leftover = nonces - nonces_done;
 		if (leftover / (nonces_per_thread*threads) == 0)
 		{
-			if (leftover >= threads*(bytesPerSector / SCOOP_SIZE))
+			if (leftover >= threads * (bytesPerSector / SCOOP_SIZE))
 			{
 				nonces_per_thread = leftover / threads;
+				//ajusting
 				nonces_per_thread = (nonces_per_thread / (bytesPerSector / SCOOP_SIZE)) * (bytesPerSector / SCOOP_SIZE);
 			}
 			else
@@ -484,22 +500,22 @@ int main(int argc, char* argv[])
 		for (size_t i = 0; i < threads; i++)
 		{
 		#ifdef __AVX2__
-			std::thread th(std::thread(AVX2::work_i, i, addr, startnonce + nonces_done + i*nonces_per_thread, nonces_per_thread));
+			std::thread th(std::thread(AVX2::work_i, i, addr, startnonce + nonces_done + i * nonces_per_thread, nonces_per_thread));
 		#else
 			#ifdef __AVX__
-				std::thread th(std::thread(AVX1::work_i, i, addr, startnonce + nonces_done + i*nonces_per_thread, nonces_per_thread));
+				std::thread th(std::thread(AVX1::work_i, i, addr, startnonce + nonces_done + i * nonces_per_thread, nonces_per_thread));
 			#else
-				std::thread th(std::thread(SSE4::work_i, i, addr, startnonce + nonces_done + i*nonces_per_thread, nonces_per_thread));
+				std::thread th(std::thread(SSE4::work_i, i, addr, startnonce + nonces_done + i * nonces_per_thread, nonces_per_thread));
 			#endif
 		#endif
 			workers.push_back(move(th));
 			worker_status.push_back(0);
 		}
-		nonces_in_work = threads*nonces_per_thread;
+		nonces_in_work = threads * nonces_per_thread;
 		SetConsoleTextAttribute(hConsole, colour::WHITE);
 		printf("\r[%llu%%] Generating nonces from %llu to %llu\t\t\t\t\t\t\n", (nonces_done * 100) / nonces, startnonce + nonces_done, startnonce + nonces_done + nonces_in_work);
-		
 		SetConsoleTextAttribute(hConsole, colour::YELLOW);
+
 		do
 		{
 			Sleep(100);
@@ -522,11 +538,15 @@ int main(int argc, char* argv[])
 		}
 		if (writer.joinable())	writer.join();
 
-		cache_write.swap(cache); //swap buffers
+		//swap buffers
+		cache_write.swap(cache); 
 
 		writer = std::thread(writer_i, nonces_done, nonces_in_work, nonces);
+
 		nonces_done += nonces_in_work;
+
 	}
+
 
 	while ((written_scoops != 0) && (written_scoops < HASH_CAP))
 	{
