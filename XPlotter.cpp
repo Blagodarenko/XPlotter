@@ -253,6 +253,22 @@ int main(int argc, char* argv[])
 		exit(-1);
 	}
 
+#ifdef __AVX2__
+	char const *const version = "v1.3_AVX2";
+#else
+#ifdef __AVX__
+	char const *const version = "v1.3_AVX";
+#else
+	char const *const version = "v1.3_SSE";
+#endif
+#endif 
+
+	SetConsoleTextAttribute(hConsole, colour::GREEN);
+	printf("\nXPlotter %s for BURST\n",version);
+	SetConsoleTextAttribute(hConsole, colour::DARKGREEN);
+	printf("\t\tprogrammers: Blago, Cerr Janror, DCCT\n");
+	printf("\t\tPOC2 modder: Johnny (5/2018)\n\n");
+	SetConsoleTextAttribute(hConsole, colour::GRAY);
 	if (argc < 2)
 	{
 		printf("Usage: %s -id <ID> -sn <start_nonce> [-n <nonces>] -t <threads> [-path <d:\\plots>] [-mem <8G>] [-poc2] \n", argv[0]);
@@ -268,12 +284,6 @@ int main(int argc, char* argv[])
 		printf("\nExample:\n %s -id 17930413153828766298 -sn 600000000 -n 1000000 -t 6 -path D:\\plots\n", argv[0]);
 		exit(-1);
 	}
-
-	SetConsoleTextAttribute(hConsole, colour::GREEN);
-	printf("\nXPlotter v1.3 for BURST\n");
-	SetConsoleTextAttribute(hConsole, colour::DARKGREEN);
-	printf("\t\tprogrammers: Blago, Cerr Janror, DCCT\n");
-	printf("\t\tPOC2 modder: Johnny (5/2018)\n\n");
 
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 	std::vector<std::string> args(argv, &argv[(size_t)argc]);	//copy all parameters to args
@@ -367,6 +377,7 @@ int main(int argc, char* argv[])
 	else {
 		filename = std::to_string(addr) + "_" + std::to_string(startnonce) + "_" + std::to_string(nonces) + "_" + std::to_string(nonces);
 	}
+	supports_streams = drive_info(out_path);
 	BOOL granted = SetPrivilege();
 
 	if (supports_streams == 1)
@@ -382,11 +393,6 @@ int main(int argc, char* argv[])
 			printColouredMessage("File is already finished. Delete the existing file to start over", RED);
 			CloseHandle(ofile_stream);
 			exit(0);
-		}
-		if (nonces_done > 0)
-		{
-			SetConsoleTextAttribute(hConsole, colour::GREEN);
-			printf("Continuing plotting. nonce = %llu\n", nonces_done);
 		}
 	}
 
@@ -444,7 +450,7 @@ int main(int argc, char* argv[])
 	printf("Start_nonce:  %llu\n", startnonce);
 	printf("Nonces: %llu\n", nonces);
 	printf("Nonces per thread:  %llu\n", nonces_per_thread);
-	poc2 ? printf("POC2 Plotting enabled.\n") : printf("POC2 Plotting disabled.\n");
+	poc2 ? printf("POC2 Plotting: enabled\n") : printf("POC2 Plotting: disabled\n");
 
 
 	SetConsoleTextAttribute(hConsole, colour::DARKGRAY);
@@ -465,7 +471,12 @@ int main(int argc, char* argv[])
 		}
 	}
 	SetConsoleTextAttribute(hConsole, colour::TEAL);
-	printf("Uses %llu Mb of %llu Mb free RAM\n", nonces_per_thread * threads * 2 * PLOT_SIZE / 1024 / 1024, freeRAM / 1024 / 1024);
+	printf("Using %llu Mb of %llu Mb free RAM\n", nonces_per_thread * threads * 2 * PLOT_SIZE / 1024 / 1024, freeRAM / 1024 / 1024);
+	if (nonces_done > 0)
+	{
+		SetConsoleTextAttribute(hConsole, colour::GREEN);
+		printf("Resuming plotting from nonce: %llu\n", nonces_done);
+	}
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 
 
@@ -523,24 +534,26 @@ int main(int argc, char* argv[])
 			for (auto it = worker_status.begin(); it != worker_status.end(); ++it) x += *it;
 			//printProgress(x *100 / nonces_in_work);
 			printf("\r[%llu%%] CPU: %llu%% done, (%llu nonces/min)", (nonces_done * 100) / nonces, x * 100 / nonces_in_work, x * 60000 / (GetTickCount64() - t_timer));
-			printf("\t\tHDD: Writing scoops: %.2f%% %.2f MB/s", (double)(written_scoops * 100) / (double)HASH_CAP, written_scoops * 64 * nonces_in_work / 1024 / 1024 / written_scoops_time);
+			printf("\t\tHDD: Writing scoops: %.2f%% %.2f MB/s", (double)(written_scoops * 100) / (double)HASH_CAP, written_scoops * 64 * nonces_in_work / 1024 / (GetTickCount64() - written_scoops_time));
 		} while (x < nonces_in_work);
 		SetConsoleTextAttribute(hConsole, colour::GRAY);
 
 		for (auto it = workers.begin(); it != workers.end(); ++it)	if (it->joinable()) it->join();
 		for (auto it = worker_status.begin(); it != worker_status.end(); ++it) *it = 0;
 
+		//clear line
+		printf("\r             c:                                                                                 ");		
 		while ((written_scoops != 0) && (written_scoops < HASH_CAP))
 		{
 			Sleep(100);
 			printf("\r[%llu%%] CPU: %llu%% done                   ", (nonces_done * 100) / nonces, x * 100 / nonces_in_work);
-			printf("\t\tHDD: Writing scoops: %.2f%%", (double)(written_scoops * 100) / (double)HASH_CAP);
+			printf("\t\tHDD: Writing scoops: %.2f%% %.2f MB/s", (double)(written_scoops * 100) / (double)HASH_CAP, written_scoops * 64 * nonces_in_work / 1024 / (GetTickCount64() - written_scoops_time));
 		}
 		if (writer.joinable())	writer.join();
 
 		//swap buffers
 		cache_write.swap(cache); 
-
+		written_scoops_time = GetTickCount64();
 		writer = std::thread(writer_i, nonces_done, nonces_in_work, nonces);
 
 		nonces_done += nonces_in_work;
