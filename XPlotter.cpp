@@ -11,7 +11,7 @@ HANDLE ofile = nullptr;
 HANDLE ofile_stream = nullptr;
 std::vector<size_t> worker_status;
 unsigned long long written_scoops = 0;
-bool poc2 = false;
+bool poc2 = true;
 
 double written_scoops_time = 0.01;
 int supports_streams = -1; //undefined
@@ -254,12 +254,12 @@ int main(int argc, char* argv[])
 	}
 
 #ifdef __AVX2__
-	char const *const version = "v1.3_AVX2";
+	char const *const version = "v1.31_AVX2";
 #else
 #ifdef __AVX__
-	char const *const version = "v1.3_AVX";
+	char const *const version = "v1.31_AVX";
 #else
-	char const *const version = "v1.3_SSE";
+	char const *const version = "v1.31_SSE";
 #endif
 #endif 
 
@@ -271,7 +271,7 @@ int main(int argc, char* argv[])
 	SetConsoleTextAttribute(hConsole, colour::GRAY);
 	if (argc < 2)
 	{
-		printf("Usage: %s -id <ID> -sn <start_nonce> [-n <nonces>] -t <threads> [-path <d:\\plots>] [-mem <8G>] [-poc2] \n", argv[0]);
+		printf("Usage: %s -id <ID> -sn <start_nonce> [-n <nonces>] -t <threads> [-path <d:\\plots>] [-mem <8G>] [-poc1] \n", argv[0]);
 		printf("         <ID> = your numeric acount id\n");
 		printf("         <start_nonce> = where you want to start plotting.\n");
 		printf("                         If this is your first HDD then set it to 0, other wise set it to your last hdd's <start_nonce> + <nonces>\n");
@@ -280,7 +280,7 @@ int main(int argc, char* argv[])
 		printf("         <threads> = how many CPU threads you want to utilise\n");
 		printf("         -path = the place where plots will be written\n");
 		printf("         -mem = how much memory you will use\n");
-		printf("         -poc2 = plot POC2 files\n");
+		printf("         -poc1 = plot POC1 files (legacy plot file format)\n");
 		printf("\nExample:\n %s -id 17930413153828766298 -sn 600000000 -n 1000000 -t 6 -path D:\\plots\n", argv[0]);
 		exit(-1);
 	}
@@ -302,8 +302,8 @@ int main(int argc, char* argv[])
 			threads = strtoull(args[i].c_str(), 0, 10);
 		if (args[i] == "-path")
 			out_path = args[++i];
-		if (args[i] == "-poc2")
-			poc2 = true;
+		if (args[i] == "-poc1")
+			poc2 = false;
 		if (args[i] == "-mem")
 		{
 				i++;
