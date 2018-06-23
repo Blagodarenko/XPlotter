@@ -47,6 +47,9 @@
     <ClCompile Include="mshabal_avx2.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="mshabal256_avx2.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <MASM Include="shabal.asm">
